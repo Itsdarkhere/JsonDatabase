@@ -1,4 +1,4 @@
-package client;
+package Json.Database;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
@@ -17,9 +17,6 @@ public class Client {
     String value;
     @Parameter(names={"-in"})
     String fileName;
-
-
-
 
     public static void main(String[] args) {
 
@@ -94,24 +91,5 @@ public class Client {
 
     }
 }
-class Input {
-    JsonElement type;
-    JsonElement key;
-    JsonElement value;
 
-    Input(JsonElement type, JsonElement key, JsonElement value) {
-        this.type = type;
-        this.key = key;
-        this.value = value;
-    }
-    JsonElement getType() {
-        return type;
-    }
-    JsonElement getKey() {
-        return key;
-    }
-    JsonElement getValue() {
-        return value;
-    }
-}
 

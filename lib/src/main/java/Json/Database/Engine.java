@@ -31,6 +31,7 @@ public class Engine {
         Lock writeLock = lock.writeLock();
 
         //useful stuff
+        DatabaseMethods databaseMethods = new DatabaseMethods();
         HashMap<JsonElement, JsonElement> database;
         DataOutputStream output = new DataOutputStream(socket.getOutputStream());
         String message;
@@ -43,27 +44,20 @@ public class Engine {
         String trimmedKey = null;
 
 
-        //Selecting action based on the received input (get, set, delete, exit).
+
         try {
 
             //getting database is surrounded in a try catch since it throws an error if its not found.
             //if the db does not exist, it does not contain the key. So the catch handles the response.
-            //implementing searching through jsonObjects for internal JsonElements
-            //if its a JsonArray
-            //if there is no database on record, will create an empty one
-            //implementing searching through jsonObjects for internal JsonElements
-            //if its a JsonArray
-            //implementing searching through jsonObjects for internal JsonElements
-            //if its a JsonArray
-            //close the server on "exit" command
-            //close server and stops accepting new client connections
+            //Selecting action based on the received input (get, set, delete, exit).
             switch (gson.fromJson(inputInForm.getType(), String.class)) {
                 case "get" -> {
                     try {
 
-                        database = getDatabase();
+                        database = databaseMethods.getDatabase();
 
                     } catch (Exception f) {
+
                         System.out.println(f.getMessage());
                         message = "{\"response\":\"ERROR\", \"reason\":\"No such key\"}";
                         response = gson.fromJson(message, Response.class);
@@ -132,9 +126,10 @@ public class Engine {
 
                     }
                 }
+
                 case "set" -> {
                     try {
-                        database = getDatabase();
+                        database = databaseMethods.getDatabase();
 
                     } catch (Exception f) {
                         database = new HashMap<JsonElement, JsonElement>();
@@ -221,7 +216,7 @@ public class Engine {
                         database.remove(J.get(0).toString());
                         database.put(J.get(0), object);
 
-                        saveDatabase(database);
+                        databaseMethods.saveDatabase(database);
                         writeLock.unlock();
                         message = "{\"response\":\"OK\"}";
                         response = gson.fromJson(message, Response.class);
@@ -233,7 +228,7 @@ public class Engine {
                     } else {
                         writeLock.lock();
                         database.put(inputInForm.getKey(), inputInForm.getValue());
-                        saveDatabase(database);
+                        databaseMethods.saveDatabase(database);
                         writeLock.unlock();
                         message = "{\"response\":\"OK\"}";
                         response = gson.fromJson(message, Response.class);
@@ -245,7 +240,7 @@ public class Engine {
                 }
                 case "delete" -> {
                     try {
-                        database = getDatabase();
+                        database = databaseMethods.getDatabase();
 
                     } catch (Exception f) {
                         message = "{\"response\":\"ERROR\", \"reason\":\"No such key\"}";
@@ -284,7 +279,7 @@ public class Engine {
                                     writeLock.lock();
                                     database.remove(J.get(0).toString());
                                     database.put(J.get(0), toUse);
-                                    saveDatabase(database);
+                                    databaseMethods.saveDatabase(database);
                                     writeLock.unlock();
                                     message = "{\"response\":\"OK\"}";
                                     response = gson.fromJson(message, Response.class);
@@ -305,13 +300,12 @@ public class Engine {
 
                         }
 
-
                         //if its a normal String that  we are looking for
                     } else {
                         writeLock.lock();
                         if (database.containsKey(inputInForm.getKey().toString())) {
                             database.remove(inputInForm.getKey());
-                            saveDatabase(database);
+                            databaseMethods.saveDatabase(database);
                             writeLock.unlock();
 
                             message = "{\"response\":\"OK\"}";
@@ -351,6 +345,7 @@ public class Engine {
             System.out.println(b.getMessage());
         }
     }
+
     boolean isSocketAlive() {
         return socket.isClosed() ;
     }
@@ -359,29 +354,5 @@ public class Engine {
     String trimKey(String key) {
         return key.substring(1, key.length()-1);
     }
-
-
-    //synchronized method for saving the database, is called when changes are made
-    synchronized void saveDatabase(HashMap<JsonElement, JsonElement> map) throws IOException {
-        Writer writer = new FileWriter("C:\\Users\\Valtt\\IdeaProjects\\" +
-                "JSON Database\\JSON Database\\task\\src\\server\\data\\duuuUumb.json");
-        new Gson().toJson(map, writer);
-        writer.close();
-
-
-    }
-
-    //synchronized method for getting the database
-    synchronized HashMap<JsonElement, JsonElement> getDatabase() throws FileNotFoundException {
-        Gson gson = new Gson();
-        HashMap<JsonElement, JsonElement> map = gson.fromJson(new FileReader("C:\\Users\\" +
-                "Valtt\\IdeaProjects\\JSON Database\\JSON Database\\task\\src\\server\\data\\duuuUumb.json"), HashMap.class);
-        return  map;
-
-    }
-    void jsonArray() {
-
-    }
-
 
 }

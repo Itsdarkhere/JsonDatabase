@@ -23,8 +23,6 @@ public class Server {
         int port = 23451;
         boolean on = true;
 
-
-
         try {
             System.out.println("Server started!");
             ServerSocket server = new ServerSocket(port, 50, InetAddress.getByName(address));

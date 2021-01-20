@@ -1,5 +1,4 @@
 # JsonDatabase
-Fun project for storing and managing Json's in Java
 
 Hi friend!
 

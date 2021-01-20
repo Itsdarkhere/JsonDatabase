@@ -22,6 +22,7 @@ public class Client {
 
         String address = "127.0.0.1";
         int port = 23451;
+
         try {
             System.out.println("Client started!");
             Socket socket = new Socket(InetAddress.getByName(address), port);
@@ -44,10 +45,7 @@ public class Client {
             } else if (main.fileName != null){
                 System.out.println(main.fileName);
                 String toSend;
-                JsonObject jsonObject = new Gson().fromJson(new FileReader("C:\\Users\\" +
-                        "Valtt\\IdeaProjects\\JSON Database\\" +
-                        "JSON Database\\task\\src\\client\\data\\" + main.fileName), JsonObject.class);
-
+                JsonObject jsonObject = new Gson().fromJson(new FileReader(main.fileName), JsonObject.class);
                 JsonElement type = jsonObject.get("type");
                 JsonElement key = jsonObject.get("key");
                 JsonElement value = jsonObject.get("value");
@@ -83,7 +81,7 @@ public class Client {
 
 
         } catch (SocketException | UnknownHostException s) {
-            System.out.println("eh" + s.getMessage());
+            System.out.println("Error" + s.getMessage());
         } catch (IOException e) {
             System.out.println(e.getCause());
         }

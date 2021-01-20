@@ -40,16 +40,14 @@ public class Engine {
         String[] split;
         String HKey = null;
         JsonObject jO = null;
-        HashMap<JsonElement, JsonElement> map;
         String trimmedKey = null;
-
-
 
         try {
 
             //getting database is surrounded in a try catch since it throws an error if its not found.
             //if the db does not exist, it does not contain the key. So the catch handles the response.
             //Selecting action based on the received input (get, set, delete, exit).
+
             switch (gson.fromJson(inputInForm.getType(), String.class)) {
                 case "get" -> {
                     try {
@@ -65,6 +63,7 @@ public class Engine {
                         output.writeUTF(messageInJson);
                         break;
                     }
+
                     split = inputInForm.getKey().toString().split("");
                     if (split[0].equals("[")) {
                         JsonArray J = gson.fromJson(inputInForm.getKey(), JsonArray.class);

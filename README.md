@@ -12,7 +12,7 @@ Client-server application that allows the clients to store/modify data on the se
 
 To use the program you would need to add program arguments.
 
--t(type) <br />
--k(key) <br />
--v(value) <br />
--in(filename) <br />
+-t (type) <br />
+-k (key) <br />
+-v (value) <br />
+-in (filename) <br />
